@@ -1,0 +1,158 @@
+[
+    {
+        "productId": "737145",
+        "productName": "Caldo Knorr de verdura deshidratado 12 cubos",
+        "brand": "Knorr",
+        "brandId": 2001177,
+        "brandImageUrl": null,
+        "linkText": "caldo-knorr-de-verdura-deshidratado-12-cubos-737145",
+        "productReference": "737145",
+        "productReferenceCode": "737145",
+        "categoryId": "196",
+        "productTitle": "",
+        "metaTagDescription": "Caldo Knorr de verdura deshidratado 12 cubos",
+        "releaseDate": "2024-02-08T00:00:00Z",
+        "clusterHighlights": {},
+        "productClusters": {
+            "13830": "Especial seleccionados",
+            "13834": "Nutrición",
+            "19502": "Alimentos Unilever"
+        },
+        "searchableClusters": {
+            "13830": "Especial seleccionados",
+            "13834": "Nutrición"
+        },
+        "categories": [
+            "/Almacén/Caldos, sopas y puré/Caldos/",
+            "/Almacén/Caldos, sopas y puré/",
+            "/Almacén/"
+        ],
+        "categoriesIds": [
+            "/161/195/196/",
+            "/161/195/",
+            "/161/"
+        ],
+        "link": "https://www.carrefour.com.ar/caldo-knorr-de-verdura-deshidratado-12-cubos-737145/p",
+        "Estado por Tienda": [
+            "0"
+        ],
+        "Fraccionable": [
+            "false"
+        ],
+        "EC_Código sumarizado": [
+            "1   4  13  03  00"
+        ],
+        "EC_Familia": [
+            "CALDOS"
+        ],
+        "Código Marca": [
+            "P01038"
+        ],
+        "Estado por Compañía": [
+            "S"
+        ],
+        "Madre ó Relacionado": [
+            "S"
+        ],
+        "EC_Categoría": [
+            "N"
+        ],
+        "EC_Sector": [
+            "P.G.C."
+        ],
+        "EC_Subfamilia": [
+            "VERDURA"
+        ],
+        "Unidad de Necesidad": [
+            "CALDO EN CUBO"
+        ],
+        "Precio Cuidado": [
+            "false"
+        ],
+        "Status 900": [
+            "SI"
+        ],
+        "Cantidad máxima permitida para Compra Inmediata": [
+            "8"
+        ],
+        "EC_Sección": [
+            "SECO"
+        ],
+        "Cantidad Maxima Permitida": [
+            "8"
+        ],
+        "Descripción Genexis": [
+            "CALDO VERDURA CUBOS KNORR X 12 UNI"
+        ],
+        "Huella Natural": [
+            "false"
+        ],
+        "Fecha ultima novedad": [
+            "2025 May 15 01:16:04"
+        ],
+        "items": [
+            {
+                "itemId": "181130",
+                "name": "Caldo Knorr de verdura deshidratado 12 cubos",
+                "nameComplete": "Caldo Knorr de verdura deshidratado 12 cubos",
+                "complementName": "",
+                "ean": "7794000008557",
+                "referenceId": [
+                    {
+                        "Key": "RefId",
+                        "Value": "7794000008557"
+                    }
+                ],
+                "measurementUnit": "un",
+                "unitMultiplier": 1.0000,
+                "modalType": null,
+                "isKit": false,
+                "images": [
+                    {
+                        "imageId": "553763",
+                        "imageLabel": "",
+                        "imageTag": "<img src=\"~/arquivos/ids/553763-#width#-#height#/7794000008557_E01.jpg?v=638614987655670000\" width=\"#width#\" height=\"#height#\" alt=\"7794000008557_E01\" id=\"\" />",
+                        "imageUrl": "https://carrefourar.vteximg.com.br/arquivos/ids/553763/7794000008557_E01.jpg?v=638614987655670000",
+                        "imageText": "7794000008557_E01",
+                        "imageLastModified": "2024-09-09T17:12:45.5670000Z"
+                    }
+                ],
+                "sellers": [
+                    {
+                        "sellerId": "1",
+                        "sellerName": "CARREFOUR",
+                        "addToCartLink": "https://www.carrefour.com.ar/checkout/cart/add?sku=181130&qty=1&seller=1&sc=1&price=198900&cv=_&sc=1",
+                        "sellerDefault": true,
+                        "commertialOffer": {
+                            "DeliverySlaSamplesPerRegion": {
+                                "0": {
+                                    "DeliverySlaPerTypes": [],
+                                    "Region": null
+                                }
+                            },
+                            "DiscountHighLight": [],
+                            "GiftSkuIds": [],
+                            "BuyTogether": [],
+                            "ItemMetadataAttachment": [],
+                            "Price": 1989.0,
+                            "ListPrice": 1989.0,
+                            "PriceWithoutDiscount": 1989.0,
+                            "FullSellingPrice": 1989.0,
+                            "RewardValue": 0.0,
+                            "PriceValidUntil": "2026-05-19T01:30:48Z",
+                            "AvailableQuantity": 99999,
+                            "IsAvailable": true
+                        }
+                    }
+                ],
+                "Videos": [],
+                "estimatedDateArrival": null
+            }
+        ]
+    }
+]
+
+
+
+
+[{"productId":"737145","productName":"Caldo Knorr de verdura deshidratado 12 cubos","brand":"Knorr","brandId":2001177,"brandImageUrl":null,"linkText":"caldo-knorr-de-verdura-deshidratado-12-cubos-737145","productReference":"737145","productReferenceCode":"737145","categoryId":"196","productTitle":"","metaTagDescription":"Caldo Knorr de verdura deshidratado 12 cubos","releaseDate":"2024-02-08T00:00
