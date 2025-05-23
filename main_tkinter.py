@@ -12,31 +12,37 @@ class SupermercadoApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Comparador de Precios Supermercados")
-        self.root.geometry("950x500")
+        self.root.geometry("1000x600")
 
-        # Entrada de búsqueda
         self.entry = tk.Entry(self.root, font=("Arial", 14), width=50)
         self.entry.pack(pady=10)
 
-        # Botón de búsqueda
+        self.coincidencia_exacta = tk.BooleanVar(value=False)
+        self.check_btn = tk.Checkbutton(
+            self.root, text="Coincidencia exacta", variable=self.coincidencia_exacta, font=("Arial", 11)
+        )
+        self.check_btn.pack()
+
         self.search_btn = tk.Button(
             self.root, text="Buscar", command=self.buscar, font=("Arial", 12))
         self.search_btn.pack()
 
-        # Tabla de resultados
-        self.tree = ttk.Treeview(self.root, columns=(
-            "Supermercado", "Nombre", "EAN", "Precio", "URL"), show="headings")
+        self.tree = ttk.Treeview(
+            self.root,
+            columns=("Supermercado", "Nombre", "EAN", "Precio", "URL"),
+            show="headings"
+        )
         for col in ("Supermercado", "Nombre", "EAN", "Precio", "URL"):
             self.tree.heading(col, text=col)
-            self.tree.column(col, width=180 if col !=
-                             "URL" else 250, anchor=tk.W)
+            if col == "URL":
+                self.tree.column(col, width=80, anchor=tk.CENTER)
+            else:
+                self.tree.column(col, width=180, anchor=tk.W)
         self.tree.pack(expand=True, fill=tk.BOTH, pady=10)
         self.tree.bind("<Double-1>", self.abrir_url)
 
-        # Botones para renovar cookies
         self.cookie_frame = tk.Frame(self.root)
         self.cookie_frame.pack()
-
         tk.Button(self.cookie_frame, text="♻️ Carrefour",
                   command=self.renovar_carrefour).pack(side=tk.LEFT, padx=5)
         tk.Button(self.cookie_frame, text="♻️ Vea",
@@ -55,44 +61,34 @@ class SupermercadoApp:
             messagebox.showwarning("Atención", "Ingrese un producto a buscar.")
             return
 
+        exacta = self.coincidencia_exacta.get()
         self.tree.delete(*self.tree.get_children())
 
-        # Buscar en sitios libres (Comodín y Hiperlibertad)
         for dominio in ["www.comodinencasa.com.ar", "www.hiperlibertad.com.ar"]:
             try:
-                resultados = buscar_vtex_httpx(keywords, dominio)
-                for r in resultados:
+                resultados = buscar_vtex_httpx(keywords, dominio, exacta)
+                if not resultados:
                     self.tree.insert("", tk.END, values=(
-                        dominio, r['nombre'], r['ean'], r['precio'], r['url']))
+                        dominio, "Sin resultados", "-", "-", "-"))
+                else:
+                    for r in resultados:
+                        self.tree.insert("", tk.END, values=(
+                            dominio, r['nombre'], r['ean'], r['precio'], r['url']))
             except Exception as e:
                 print(f"Error en {dominio}: {e}")
 
-        # Carrefour
-        try:
-            resultados = buscar_carrefour_httpx(keywords)
-            for r in resultados:
-                self.tree.insert("", tk.END, values=(
-                    "Carrefour", r['nombre'], r['ean'], r['precio'], r['url']))
-        except Exception as e:
-            print("Carrefour falló:", e)
-
-        # Vea
-        try:
-            resultados = buscar_vea_httpx(keywords)
-            for r in resultados:
-                self.tree.insert("", tk.END, values=(
-                    "Vea", r['nombre'], r['ean'], r['precio'], r['url']))
-        except Exception as e:
-            print("Vea falló:", e)
-
-        # Jumbo
-        try:
-            resultados = buscar_jumbo_httpx(keywords)
-            for r in resultados:
-                self.tree.insert("", tk.END, values=(
-                    "Jumbo", r['nombre'], r['ean'], r['precio'], r['url']))
-        except Exception as e:
-            print("Jumbo falló:", e)
+        for nombre, funcion in [("Carrefour", buscar_carrefour_httpx), ("Vea", buscar_vea_httpx), ("Jumbo", buscar_jumbo_httpx)]:
+            try:
+                resultados = funcion(keywords, exacta)
+                if not resultados:
+                    self.tree.insert("", tk.END, values=(
+                        nombre, "Sin resultados", "-", "-", "-"))
+                else:
+                    for r in resultados:
+                        self.tree.insert("", tk.END, values=(
+                            nombre, r['nombre'], r['ean'], r['precio'], r['url']))
+            except Exception as e:
+                print(f"{nombre} falló:", e)
 
     def renovar_carrefour(self):
         import renovar_cookies_carrefour

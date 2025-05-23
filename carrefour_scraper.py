@@ -11,7 +11,7 @@ def cargar_cookies(path="cookies_carrefour.json"):
         return None
 
 
-def buscar_carrefour_httpx(keywords):
+def buscar_carrefour_httpx(keywords, exacta=False):
     query = keywords.replace(" ", "%20")
     url = f"https://www.carrefour.com.ar/api/catalog_system/pub/products/search/?ft={query}"
     cookies_dict = cargar_cookies()
@@ -26,7 +26,6 @@ def buscar_carrefour_httpx(keywords):
         "Origin": "https://www.carrefour.com.ar"
     }
 
-    # Convertimos cookies a un formato compatible
     cookies = {k: v for k, v in cookies_dict.items()}
 
     try:
@@ -40,10 +39,17 @@ def buscar_carrefour_httpx(keywords):
 
             productos = response.json()
             resultados = []
+            palabras = keywords.lower().split()
 
             for producto in productos:
                 for item in producto.get("items", []):
                     nombre = item.get("nameComplete", "Sin nombre")
+                    nombre_lower = nombre.lower()
+                    nombre_palabras = nombre_lower.split()
+
+                    if exacta and not all(p in nombre_palabras for p in palabras):
+                        continue
+
                     ean = item.get("ean", "Sin EAN")
                     precio = item.get("sellers", [{}])[0].get(
                         "commertialOffer", {}).get("Price", "No disponible")
@@ -64,7 +70,8 @@ def buscar_carrefour_httpx(keywords):
 
 
 if __name__ == "__main__":
-    resultados = buscar_carrefour_httpx("caldo knorr verdura")
+    resultados = buscar_carrefour_httpx(
+        "caldo knorr verdura 12 cubos", exacta=True)
 
     if not resultados:
         print("⚠️ No se encontraron resultados.")
