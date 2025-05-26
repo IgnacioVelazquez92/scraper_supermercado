@@ -1,8 +1,8 @@
 # 🛒 Comparador de Precios de Supermercados (Argentina)
 
-Este proyecto es una aplicación de escritorio desarrollada en **Python con Tkinter** para comparar precios de productos entre diferentes supermercados que utilizan la tecnología **VTEX** en Argentina.
-
-Permite buscar productos por nombre o código de barras (EAN), visualizar precios de varios sitios simultáneamente y renovar cookies de sesión para evitar bloqueos por Cloudflare.
+Aplicación de escritorio desarrollada en **Python + Tkinter** para comparar precios de productos en supermercados argentinos que usan la tecnología **VTEX**.  
+Permite buscar productos por **nombre**, **EAN**, o **subir un Excel por lote**, obteniendo precios y disponibilidad en tiempo real.  
+Incluye sistema de **renovación de cookies** para superar bloqueos de Cloudflare.
 
 ---
 
@@ -10,36 +10,50 @@ Permite buscar productos por nombre o código de barras (EAN), visualizar precio
 
 ```
 scraper_supermercados/
-├── main_tkinter.py                # Interfaz gráfica principal
-├── libre_scraper.py               # Scraper para Comodín e HiperLibertad
-├── carrefour_scraper.py          # Scraper con cookies para Carrefour
-├── vea_scraper.py                # Scraper con cookies para Vea
-├── jumbo_scraper.py              # Scraper con cookies para Jumbo
-├── renovar_cookies_carrefour.py  # Script para renovar cookies Carrefour
-├── renovar_cookies_vea.py        # Script para renovar cookies Vea
-├── renovar_cookies_jumbo.py      # Script para renovar cookies Jumbo
-├── cookies_carrefour.json        # Cookies vigentes para Carrefour
-├── cookies_vea.json              # Cookies vigentes para Vea
-├── cookies_jumbo.json            # Cookies vigentes para Jumbo
-├── requirements.txt              # Dependencias del proyecto
+├── assets/ # Carpeta para archivos de cookies (.json)
+│ ├── cookies_carrefour.json
+│ ├── cookies_vea.json
+│ ├── cookies_jumbo.json
+├── scrapers/ # Scrapers para cada supermercado
+│ ├── carrefour_scraper.py
+│ ├── vea_scraper.py
+│ ├── jumbo_scraper.py
+│ ├── libre_scraper.py # Comodín e Hiperlibertad
+├── utils/ # Utilidades y procesamiento
+│ ├── procesar_lote.py # Lógica para búsqueda por lote (Excel)
+│ ├── renovar_cookies_carrefour.py
+│ ├── renovar_cookies_vea.py
+│ ├── renovar_cookies_jumbo.py
+├── ui/ # Interfaz gráfica de usuario
+│ ├── main_window.py
+├── requirements.txt # Dependencias del proyecto
 ```
 
 ---
 
 ## 🚀 Características principales
 
-- Búsqueda de productos por nombre o EAN
-- Comparación simultánea entre:
+✅ Búsqueda de productos por **nombre** o **EAN**  
+✅ Subida de **Excel por lote** con comparación cruzada por EAN  
+✅ Scrapers para:
 
-  - Carrefour
-  - Vea
-  - Jumbo
-  - Comodín
-  - HiperLibertad
+- Carrefour
+- Vea
+- Jumbo
+- Comodín
+- Hiperlibertad
 
-- Modo de coincidencia flexible o exacta (próxima funcionalidad)
-- Botones para renovar cookies directamente desde la interfaz
-- Acceso directo a los productos con doble clic
+✅ Renovación de cookies directamente desde la interfaz  
+✅ Búsqueda **flexible** por nombre + cruce **preciso** por EAN  
+✅ Generación de Excel final con:
+
+- Precios de la competencia
+- Disponibilidad
+- Análisis de desvío de precios
+- Comparativa resumida
+
+✅ Soporta **múltiples EAN por producto** (separados por comas)  
+✅ Loader visual durante el scraping y procesamiento
 
 ---
 
@@ -47,6 +61,7 @@ scraper_supermercados/
 
 - Python 3.9 o superior
 - Google Chrome instalado
+- ChromeDriver compatible (se descarga automáticamente con `undetected_chromedriver`)
 
 Instalación de dependencias:
 
@@ -59,7 +74,7 @@ pip install -r requirements.txt
 ## 🧪 Ejecución del proyecto
 
 ```bash
-python main_tkinter.py
+python ui/main_window.py
 ```
 
 ---
@@ -69,9 +84,10 @@ python main_tkinter.py
 Si Carrefour, Vea o Jumbo dejan de funcionar, ejecutá alguno de estos scripts:
 
 ```bash
-python renovar_cookies_carrefour.py
-python renovar_cookies_vea.py
-python renovar_cookies_jumbo.py
+python utils/renovar_cookies_carrefour.py
+python utils/renovar_cookies_vea.py
+python utils/renovar_cookies_jumbo.py
+
 ```
 
 ---
@@ -81,8 +97,7 @@ python renovar_cookies_jumbo.py
 Si querés distribuir la app como ejecutable para Windows:
 
 ```bash
-pip install pyinstaller
-pyinstaller --onefile --noconsole main_tkinter.py
+pyinstaller --noconfirm --onefile --windowed --add-data "assets;assets" ui/main_window.py
 ```
 
 ---
@@ -93,12 +108,3 @@ pyinstaller --onefile --noconsole main_tkinter.py
 - Proyecto en evolución: se están agregando mejoras para coincidencia exacta, empaquetado y rendimiento avanzado
 
 ---
-
-## 🛠️ TODO (Próximos pasos)
-
-- [x] Soporte para scraping con httpx + HTTP/2
-- [x] Manejo de cookies para evitar bloqueos
-- [x] Interfaz gráfica amigable
-- [ ] Checkbox de "coincidencia exacta"
-- [ ] Mejora visual para categorizar supermercados
-- [ ] Filtros por precio y ordenamiento
