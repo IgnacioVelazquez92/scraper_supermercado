@@ -1,12 +1,15 @@
+import os
 import json
 import time
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 
 
-def renovar_cookies_jumbo(output_path="cookies_jumbo.json"):
+def renovar_cookies_carrefour():
+    output_path = os.path.join(os.path.dirname(
+        __file__), '..', 'assets', 'cookies_carrefour.json')
     options = uc.ChromeOptions()
-    options.headless = True  # No se muestra la ventana del navegador
+    options.headless = True
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
@@ -15,10 +18,10 @@ def renovar_cookies_jumbo(output_path="cookies_jumbo.json"):
     driver = uc.Chrome(options=options)
 
     try:
-        url = "https://www.jumbo.com.ar"
+        url = "https://www.carrefour.com.ar"
         driver.get(url)
         print(f"🌐 Navegando a {url}...")
-        time.sleep(8)  # Espera que se cargue completamente
+        time.sleep(8)
 
         cookies = driver.get_cookies()
         cookies_dict = {cookie['name']: cookie['value'] for cookie in cookies}
@@ -35,4 +38,4 @@ def renovar_cookies_jumbo(output_path="cookies_jumbo.json"):
 
 
 if __name__ == "__main__":
-    renovar_cookies_jumbo()
+    renovar_cookies_carrefour()

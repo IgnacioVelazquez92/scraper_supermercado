@@ -1,4 +1,5 @@
 import httpx
+import re
 
 
 def buscar_vtex_httpx(keywords, dominio, exacta=False):
@@ -24,26 +25,39 @@ def buscar_vtex_httpx(keywords, dominio, exacta=False):
             resultados = []
             palabras = keywords.lower().split()
 
+            # Mapeamos el dominio a nombre más amigable
+            nombres_tienda = {
+                "www.comodinencasa.com.ar": "Comodín",
+                "www.hiperlibertad.com.ar": "Hiperlibertad"
+            }
+            nombre_super = nombres_tienda.get(dominio, dominio)
+
             for producto in productos:
                 for item in producto.get("items", []):
                     nombre = item.get("nameComplete", "Sin nombre")
                     nombre_lower = nombre.lower()
-                    nombre_palabras = nombre_lower.split()
+                    nombre_normalizado = re.sub(
+                        r'[^a-z0-9]', ' ', nombre_lower).replace('  ', ' ')
+                    palabras_normalizadas = [
+                        re.sub(r'[^a-z0-9]', '', p) for p in palabras]
 
-                    if exacta and not all(p in nombre_palabras for p in palabras):
-                        continue
+                    if exacta:
+                        if not all(p in nombre_normalizado for p in palabras_normalizadas):
+                            continue
 
                     ean = item.get("ean", "Sin EAN")
                     precio = item.get("sellers", [{}])[0].get(
                         "commertialOffer", {}).get("Price", "No disponible")
-                    imagen = item.get("images", [{}])[0].get("imageUrl", "")
+                    disponible = item.get("sellers", [{}])[0].get(
+                        "commertialOffer", {}).get("IsAvailable", False)
                     url_producto = f"https://{dominio}/{producto.get('linkText', '')}/p"
 
                     resultados.append({
                         "nombre": nombre,
                         "ean": ean,
                         "precio": precio,
-                        "imagen": imagen,
+                        "isAvailable": disponible,
+                        "supermercado": nombre_super,  # Aquí agregamos el nombre del super
                         "url": url_producto
                     })
 
@@ -68,4 +82,4 @@ if __name__ == "__main__":
             print("⚠️ No se encontraron resultados.")
         for r in resultados:
             print(
-                f"- {r['nombre']} | EAN: {r['ean']} | ${r['precio']} | {r['url']}")
+                f"- {r['supermercado']} | {r['nombre']} | EAN: {r['ean']} | ${r['precio']} | Disponible: {r['isAvailable']} | {r['url']}")

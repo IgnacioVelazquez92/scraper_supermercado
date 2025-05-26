@@ -1,12 +1,15 @@
+import os
 import json
 import time
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 
 
-def renovar_cookies_carrefour(output_path="cookies_carrefour.json"):
+def renovar_cookies_vea():
+    output_path = os.path.join(os.path.dirname(
+        __file__), '..', 'assets', 'cookies_vea.json')
     options = uc.ChromeOptions()
-    options.headless = True  # ✅ No muestra ventana
+    options.headless = True
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-dev-shm-usage")
@@ -15,10 +18,10 @@ def renovar_cookies_carrefour(output_path="cookies_carrefour.json"):
     driver = uc.Chrome(options=options)
 
     try:
-        url = "https://www.carrefour.com.ar"
+        url = "https://www.vea.com.ar"
         driver.get(url)
         print(f"🌐 Navegando a {url}...")
-        time.sleep(8)  # ⏳ Espera que se cargue la página y se activen cookies
+        time.sleep(8)
 
         cookies = driver.get_cookies()
         cookies_dict = {cookie['name']: cookie['value'] for cookie in cookies}
@@ -32,7 +35,3 @@ def renovar_cookies_carrefour(output_path="cookies_carrefour.json"):
         print(f"❌ Error durante la renovación de cookies: {e}")
     finally:
         driver.quit()
-
-
-if __name__ == "__main__":
-    renovar_cookies_carrefour()
