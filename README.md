@@ -29,7 +29,7 @@ scraper_supermercados/
 ├── requirements.txt # Dependencias del proyecto
 ```
 
----
+---e
 
 ## 🚀 Características principales
 

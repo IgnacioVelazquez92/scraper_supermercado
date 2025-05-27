@@ -9,6 +9,7 @@ from scrapers.vea_scraper import buscar_vea_httpx
 from scrapers.jumbo_scraper import buscar_jumbo_httpx
 
 from utils import renovar_cookies_carrefour, renovar_cookies_vea, renovar_cookies_jumbo, procesar_lote
+from . import lote_window
 
 
 class SupermercadoApp:
@@ -27,14 +28,14 @@ class SupermercadoApp:
         self.notebook.add(self.tab_nombre, text="🔎 Buscar por Nombre")
         self.init_tab_nombre()
 
-        # Pestaña para búsqueda por lote (por ahora placeholder)
+        # Pestaña de búsqueda por lote
         self.tab_lote = ttk.Frame(self.notebook)
         self.notebook.add(self.tab_lote, text="📦 Buscar por Lote")
         tk.Button(self.tab_lote, text="📥 Subir Excel y Procesar",
                   command=self.procesar_lote).pack(pady=20)
 
     def procesar_lote(self):
-        procesar_lote.main()
+        lote_window.main()
 
     def init_tab_nombre(self):
         self.entry = tk.Entry(self.tab_nombre, font=("Arial", 14), width=50)
@@ -146,11 +147,26 @@ class SupermercadoApp:
         self.tree.heading(
             col, command=lambda: self.sort_column(col, not reverse))
 
+    # def copiar_seleccion(self, event):
+    #     item = self.tree.focus()
+    #     if item:
+    #         valores = self.tree.item(item, 'values')
+    #         texto = "\t".join(valores)
+    #         self.root.clipboard_clear()
+    #         self.root.clipboard_append(texto)
+    #         print(f"📋 Copiado: {texto}")
+
     def copiar_seleccion(self, event):
         item = self.tree.focus()
         if item:
             valores = self.tree.item(item, 'values')
-            texto = "\t".join(valores)
+            if len(valores) >= 4:
+                # Solo copiar Supermercado, Nombre y Precio
+                texto = f"{valores[0]} - {valores[1]} - ${valores[3]}"
+            else:
+                # Fallback si no tiene los campos esperados
+                texto = "\t".join(valores)
+
             self.root.clipboard_clear()
             self.root.clipboard_append(texto)
             print(f"📋 Copiado: {texto}")
