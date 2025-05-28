@@ -14,7 +14,6 @@ def buscar_vtex_lote(nombre_producto, eans, dominio):
         "Origin": f"https://{dominio}"
     }
 
-    # Mapeamos el dominio a nombre amigable
     nombres_tienda = {
         "www.comodinencasa.com.ar": "Comodín",
         "www.hiperlibertad.com.ar": "Hiperlibertad"
@@ -40,25 +39,12 @@ def buscar_vtex_lote(nombre_producto, eans, dominio):
                     nombre = item.get("nameComplete", "").lower()
                     ean_item = item.get("ean", "").strip().lstrip("'")
 
-                    # 🎯 Si EAN coincide, lo traemos
-                    if any(ean_item == e.strip().lstrip("'") for e in eans if e):
-                        precio = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("Price", "No disponible")
-                        disponible = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("IsAvailable", False)
-                        link = f"https://{dominio}/{producto.get('linkText', '')}/p"
-                        resultados.append({
-                            "supermercado": nombre_super,
-                            "nombre": nombre,
-                            "ean": ean_item,
-                            "precio": precio,
-                            "isAvailable": disponible,
-                            "url": link
-                        })
-                        continue
+                    # 🔎 Debug EANs encontrados
+                    print(
+                        f"🔍 {nombre_super} - EAN encontrado: {ean_item} - URL: https://{dominio}/{producto.get('linkText', '')}/p")
 
-                    # 🎯 Si no hay EAN o no coincide, filtro laxo por palabras
-                    if any(p in nombre for p in palabras):
+                    # 🎯 Filtrado estricto por EAN
+                    if any(ean_item == e.strip().lstrip("'") for e in eans if e):
                         precio = item.get("sellers", [{}])[0].get(
                             "commertialOffer", {}).get("Price", "No disponible")
                         disponible = item.get("sellers", [{}])[0].get(

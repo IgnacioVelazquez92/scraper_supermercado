@@ -33,6 +33,10 @@ def buscar_carrefour_lote(nombre_producto, eans):
 
     cookies = {k: v for k, v in cookies_dict.items()}
 
+    # Limpiar y normalizar los EANs proporcionados
+    eans_limpios = [re.sub(r"[^\d]", "", e.strip()) for e in eans if e.strip()]
+    print(f"📦 EANs cargados: {eans_limpios}")
+
     try:
         with httpx.Client(http2=True, headers=headers, cookies=cookies, timeout=10.0) as client:
             response = client.get(url)
@@ -50,32 +54,20 @@ def buscar_carrefour_lote(nombre_producto, eans):
             for producto in productos:
                 for item in producto.get("items", []):
                     nombre = item.get("nameComplete", "").lower()
-                    ean_item = item.get("ean", "").strip().lstrip("'")
+                    ean_item = re.sub(
+                        r"[^\d]", "", item.get("ean", "").strip())
+
+                    # Mostrar EAN y URL para depuración
+                    link = f"https://www.carrefour.com.ar/{producto.get('linkText', '')}/p"
+                    print(
+                        f"🔍 Carrefour - EAN encontrado: {ean_item} - URL: {link}")
 
                     # 🎯 Si EAN coincide, lo traemos
-                    if any(ean_item == e.strip().lstrip("'") for e in eans if e):
+                    if ean_item in eans_limpios:
                         precio = item.get("sellers", [{}])[0].get(
                             "commertialOffer", {}).get("Price", "No disponible")
                         disponible = item.get("sellers", [{}])[0].get(
                             "commertialOffer", {}).get("IsAvailable", False)
-                        link = f"https://www.carrefour.com.ar/{producto.get('linkText', '')}/p"
-                        resultados.append({
-                            "supermercado": "Carrefour",
-                            "nombre": nombre,
-                            "ean": ean_item,
-                            "precio": precio,
-                            "isAvailable": disponible,
-                            "url": link
-                        })
-                        continue
-
-                    # 🎯 Si no hay EAN o no coincide, filtro laxo por palabras
-                    if any(p in nombre for p in palabras):
-                        precio = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("Price", "No disponible")
-                        disponible = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("IsAvailable", False)
-                        link = f"https://www.carrefour.com.ar/{producto.get('linkText', '')}/p"
                         resultados.append({
                             "supermercado": "Carrefour",
                             "nombre": nombre,
@@ -95,8 +87,8 @@ def buscar_carrefour_lote(nombre_producto, eans):
 if __name__ == "__main__":
     print("\n🔍 Buscando...")
     resultados = buscar_carrefour_lote(
-        nombre_producto="cafe torrado",
-        eans=["7790150006375", "7790150006177"]
+        nombre_producto="nuez moscada",
+        eans=["7790150050040", "7790150536254"]
     )
     if not resultados:
         print("⚠️ No se encontraron resultados.")

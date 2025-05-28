@@ -1,7 +1,6 @@
 import httpx
 import json
 import os
-import re
 
 
 def cargar_cookies(path=None):
@@ -32,7 +31,7 @@ def buscar_jumbo_lote(nombre_producto, eans):
     }
 
     try:
-        with httpx.Client(http2=True, headers=headers, cookies=cookies_dict, timeout=10.0) as client:
+        with httpx.Client(http2=True, headers=headers, cookies=cookies_dict, timeout=15.0) as client:
             response = client.get(url)
             print(f"🛰️ [Jumbo - Lote] Status: {response.status_code}")
 
@@ -42,33 +41,17 @@ def buscar_jumbo_lote(nombre_producto, eans):
             productos = response.json()
             resultados = []
 
-            palabras = [p.lower()
-                        for p in nombre_producto.split() if len(p) > 1]
-
             for producto in productos:
                 for item in producto.get("items", []):
                     nombre = item.get("nameComplete", "").lower()
                     ean_item = item.get("ean", "").strip().lstrip("'")
 
-                    # 🎯 Si EAN coincide, lo traemos
-                    if any(ean_item == e.strip().lstrip("'") for e in eans if e):
-                        precio = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("Price", "No disponible")
-                        disponible = item.get("sellers", [{}])[0].get(
-                            "commertialOffer", {}).get("IsAvailable", False)
-                        link = f"https://www.jumbo.com.ar/{producto.get('linkText', '')}/p"
-                        resultados.append({
-                            "supermercado": "Jumbo",
-                            "nombre": nombre,
-                            "ean": ean_item,
-                            "precio": precio,
-                            "isAvailable": disponible,
-                            "url": link
-                        })
-                        continue
+                    # Mostrar por consola para debug
+                    print(
+                        f"🔍 Jumbo - EAN encontrado: {ean_item} - URL: https://www.jumbo.com.ar/{producto.get('linkText', '')}/p")
 
-                    # 🎯 Si no hay EAN o no coincide, filtro laxo por palabras
-                    if any(p in nombre for p in palabras):
+                    # Filtrado ESTRICTO por EAN
+                    if any(ean_item == e.strip().lstrip("'") for e in eans if e):
                         precio = item.get("sellers", [{}])[0].get(
                             "commertialOffer", {}).get("Price", "No disponible")
                         disponible = item.get("sellers", [{}])[0].get(
